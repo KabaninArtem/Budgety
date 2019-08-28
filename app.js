@@ -43,6 +43,8 @@ const UIController = (function () {
         inputDescription: '.add__description',
         inputValue: '.add__value',
         inputBtn: '.add__btn',
+        incomeContainer: '.income__list',
+        expensesContainer: '.expenses__list',
     };
 
     return {
@@ -53,7 +55,21 @@ const UIController = (function () {
                 value: document.querySelector(DOMclasses.inputValue).value,
             }
         },
-
+        addListItem: function (obj, type) {
+            const container = type === 'exp' ? DOMclasses.expensesContainer : DOMclasses.incomeContainer;
+            const el = document.createElement('div');
+            el.className = "item clearfix";
+            el.id = `${type}-${obj.id}`;
+            el.innerHTML = `<div class="item__description">${obj.description}</div>
+                <div class="right clearfix">
+                    <div class="item__value">${obj.value}</div>
+                    ${type === 'exp' ? '<div class="item__percentage">21%</div>' : ''}
+                    <div class="item__delete">
+                       <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                    </div>
+                </div>`;
+            document.querySelector(container).appendChild(el);
+        },
         getDOMclasses: function () {
             return DOMclasses;
         }
@@ -84,6 +100,7 @@ const controller = (function (budgetCtrl, UICtrl) {
         const newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
         // 3. Add the item to the UI
+        UICtrl.addListItem(newItem, input.type);
         // 4. Calculate the budget
         // 5. Display the budget on the UI
     };
